@@ -55,27 +55,23 @@ GB1900 volunteers transcribed the *words* but, understandably, not the *style* t
 ### How it works, step by step
 
 1. **Find the words on the map.** Starting from each GB1900 point, we locate the corresponding label on the scanned map image and delineate it cleanly with **[MapReader](https://github.com/Living-with-machines/MapReader)**, a text-spotting toolkit for historical maps. This gives us a tidy picture of each label in its original font — not just the transcribed text.
-2. **Read the letterforms.** We compare each label's lettering against the Characteristic-Sheet conventions and against a set of examples verified by eye. Because the *same letter* in different styles is the cleanest signal (an italic *a* versus an upright *a*), we compare letter-for-letter, and we learn a compact "style fingerprint" for each letterform from the millions of unlabelled examples the maps provide.
-3. **Combine style with text.** The words themselves already carry a great deal of type information — `Tumulus` is self-evidently an antiquity, `Ford` a water crossing, `B.M.` a bench-mark — so we **fuse the typographic signal with text-based rules**. Each reinforces the other: the text resolves cases the font cannot, and the font resolves the many ordinary place-names that the text alone leaves ambiguous.
+2. **Learn the OS alphabet, face by face.** Each Characteristic-Sheet exemplar gives us a single letter of one OS writing face. From that seed we *spot and fan*: find the letter on real maps by same-letter visual match, and from the confident matches harvest the *other* letters of the same face, iterating until we have a real-map alphabet for **every** style the OS used — water, the four antiquity hands, the settlement roman, and each administrative capital. Font is read from the letterforms alone — the *same* letter compared against the *same* letter — so what a label *says* never leaks into what face it is judged to be.
+3. **Best three guesses, then arbitrate with text.** Some OS faces are genuinely alike — and a few categories were engraved in an *identical* face — so each label gets a ranked **top-three** font reading with confidences, not a single verdict. Those three are then re-weighted by evidence the letterforms cannot see: which words co-occur with which face across the whole corpus, and independent records of the very civic status the OS capitals were themselves encoding — administrative areas, market towns, parliamentary representation.
 4. **Map to a shared vocabulary.** Finally, the recovered types are aligned to a standard controlled vocabulary (the Getty **Art & Architecture Thesaurus**), so the enriched gazetteer can be searched, filtered, and linked to other datasets.
 
 ### What is honest to say at this stage
 
-This is a research method, and we are reporting it *before* the final numbers so that the approach can be scrutinised. Some parts are already reliable — antiquities (blackletter) and numeric labels are strongly distinguished, and the text signal is dependable wherever a label names its own type. The **hardest case is the subtle difference between the upright and italic serif faces** used for ordinary place-names, which even a careful human eye finds marginal at this map scale; we treat the font signal there as a *confidence-weighted* contribution rather than a verdict. Full evaluation will be published here as it is completed.
+This is a research method, and we are reporting it *before* the final numbers so the approach can be scrutinised. The letterform signal is strongest for the visually distinctive faces — the ornate administrative capitals, the blackletter antiquity hands, the numerals — and weakest for the plain serif faces used for ordinary names, which even a careful eye finds marginal at this map scale. Where two OS categories were engraved in the *same* face they are inseparable by design; rather than pretend to split them, we identify such pairs and merge them under human review. The best-three-guesses output, with the text and civic re-weighting, is built precisely so that hard or shared faces degrade gracefully instead of producing false certainty. Full evaluation — including which faces the maps actually let us distinguish — will be published here.
 
 ---
 
 ## 4. Results so far
 
-*Preliminary — the method is validated on a human-labelled sample; corpus-wide coverage is still growing.*
+*Preliminary — the font model is being built against the full Characteristic-Sheet taxonomy; corpus-wide coverage is still growing.*
 
-**Does the font signal work?** On word-labels hand-labelled by eye (from the processed sheets), we recover the OS lettering style by matching each letter against human-verified examples — letter-for-letter, so *content* is controlled. Leave-one-label-out:
+**Building the font model.** We are training the letterform reader against the **whole** Characteristic-Sheet taxonomy — around **44 writing faces** (water, the four antiquity hands, the settlement roman, the numerals, and the full administrative capital hierarchy), one real-map reference alphabet per face, grown by spot-and-fan from the OS's own exemplars. Every label will carry a **best-three** font reading with confidences. A **separability analysis** — measuring which faces the six-inch maps actually let us tell apart, and which collapse onto a shared face — is under way; its results, including per-face reliability and the human-confirmed identical-face merges, will be published here as they are validated.
 
-- **italic vs upright roman ≈ 0.82** — the single hardest distinction, because the OS italic serif is only mildly sloped;
-- **three-way (italic / roman / blackletter) ≈ 0.75**, and, keeping only confident calls, **≈ 0.85 over ~55% of labels**;
-- **italic** (water & descriptive names) is reliable; **blackletter** (antiquities) is usable; the **upright↔italic serif boundary is a genuine typographic ceiling** — more data *and* a learned neural embedding both land in the same place, so we treat that axis as confidence-weighted rather than decisive.
-
-**Where the value really is:** the font *disambiguates text*. "Camp", "Castle", "Cross", "Stone" mean an *antiquity* in blackletter but a modern feature in roman/italic — so typing is **font-conditioned**. A companion analysis mines the corpus for exactly which words are font-ambiguous (e.g. *Street* → roman 541:8; *Spring* → italic 319:3; *Stone* → mostly italic with a blackletter tail) to build those rules empirically.
+**Where the value really is:** the font *disambiguates text*. "Camp", "Castle", "Cross", "Stone" mean an *antiquity* in the antiquity hand but a modern feature in roman or italic — so typing is **font-conditioned**. A companion analysis mines the corpus for exactly which words are font-ambiguous, so the recovered face resolves the many ordinary place-names that the text alone leaves undecided.
 
 **Coverage:** the current edition assigns a feature type to **871,359 of the 2,666,341 labels (32.7%)**, across **15 Getty-AAT-aligned classes** — derived from the OS-grounded lexicon, the OS single-letter abbreviations (e.g. a standalone italic *W* = *well*, ~191k labels), and the font signal where a sheet has been read. Because most of that typing rests on the text and the abbreviation conventions, it is **already national in scope** and does not wait on font-spotting. The typographic reading itself is being extended across **all 35,514 label-bearing map regions** (a resumable GPU job), which progressively enriches the font-conditioned cases; the remaining ~67% of labels are as yet untyped and are shown in grey on the map.
 
@@ -85,7 +81,7 @@ The enriched gazetteer is published as a **[GitHub Release](https://github.com/W
 
 **[→ Browse the interactive map](map/)** · **[web-map feasibility / scale-up note](webmap.md)**
 
-*Alpha preview: typing is clean-process only (no legacy tokens), and font coverage is partial and growing.*
+*Alpha preview: feature type is drawn from the OS-grounded lexicon and abbreviation conventions; the full typographic reading is being built and its coverage will grow.*
 
 ---
 

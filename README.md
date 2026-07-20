@@ -6,7 +6,7 @@
 
 GB1900 is a volunteer transcription of every text label on the Ordnance Survey six-inch County Series maps of Great Britain (surveyed c. 1900) — roughly **2.67 million labels**, each a point plus its text. What it lacks is **feature type**: it records *what a label says and where*, but not *what kind of thing it is*.
 
-The Ordnance Survey, however, encoded feature type in its **typography** — italic for water, blackletter for antiquities, roman for settlements, and distinct capitals for each rung of the administrative hierarchy, as documented in its "Characteristic Sheets". **GB-STAMP recovers that lost styling from the scanned maps and turns it back into feature types**, fusing the typographic signal with text-based rules and aligning the result to the Getty Art & Architecture Thesaurus.
+The Ordnance Survey, however, encoded feature type in its **typography** — italic for water, blackletter for antiquities, roman for settlements, and distinct capitals for each rung of the administrative hierarchy, as documented in its "Characteristic Sheets". **GB-STAMP recovers that lost styling from the scanned maps and turns it back into feature types**: it learns a real-map alphabet for each of the OS's writing faces (seeded from the Characteristic-Sheet exemplars and grown by same-letter spotting), gives every label a **best-three** font reading, re-weights those readings with the text and with independent records of civic status (administrative areas, market towns, parliamentary representation), and aligns the result to the Getty Art & Architecture Thesaurus.
 
 ### 🗺️ [**Explore the interactive map »**](https://worldhistoricalgazetteer.github.io/gb-stamp/map/)
 
@@ -14,7 +14,7 @@ The Ordnance Survey, however, encoded feature type in its **typography** — ita
 
 - **[Methodology](https://worldhistoricalgazetteer.github.io/gb-stamp/)** — the source, the limitations of plain GB1900 and its abridgement, and how the method works (plain-terms + academic).
 - **[Characteristic-Sheet extraction](https://worldhistoricalgazetteer.github.io/gb-stamp/characteristic-sheets)** — every OS writing category, with exemplars, letterforms, and AAT mappings.
-- **[Interactive map](https://worldhistoricalgazetteer.github.io/gb-stamp/map/)** — a first demo (font-typed labels, coloured by OS lettering style).
+- **[Interactive map](https://worldhistoricalgazetteer.github.io/gb-stamp/map/)** — all 2.67M crowd labels, coloured by recovered feature type, with a toggleable OS sheet grid and per-sheet stats.
 - **[Web-map feasibility](https://worldhistoricalgazetteer.github.io/gb-stamp/webmap)** — a static, serverless, searchable MapLibre interface over 2.67M points (PMTiles + IndexedDB, hosted from GitHub Releases).
 - **[Licensing](https://worldhistoricalgazetteer.github.io/gb-stamp/licensing)**.
 
