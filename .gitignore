@@ -14,3 +14,4 @@ reference/*.jsonl
 
 !docs/data/
 !docs/data/*.geojson
+!docs/data/*.pmtiles
