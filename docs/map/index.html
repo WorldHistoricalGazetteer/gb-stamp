@@ -39,6 +39,10 @@
   hr{border:none;border-top:1px solid #e7e0d0;margin:11px 0}
   .toggle{display:flex;align-items:center;gap:7px;margin-top:2px;cursor:pointer}
   .fade{width:100%;margin-top:4px}
+  #fadewrap.lowz{opacity:.5}
+  #fadewrap.lowz .fade{pointer-events:none}
+  .zbadge{display:none;color:#c0392b;font-weight:600;font-size:11px;margin-left:4px}
+  #fadewrap.lowz .zbadge{display:inline}
   .maplibregl-popup-content{font-family:system-ui,sans-serif;font-size:13px;max-width:250px}
   .pt{font-family:Georgia,serif;font-size:15px;font-weight:700;margin-bottom:2px}
   .sh h3{margin:0 0 3px;font-family:Georgia,serif;font-size:14px}
@@ -66,9 +70,12 @@
   <div class="muted">Toggle the map's sheet grid; click a sheet for its dates and label/coverage stats. <b>Markers can't be clicked while outlines are shown.</b></div>
 
   <hr>
-  <label style="font-weight:600">OS six-inch map <span class="muted" id="opv">0%</span></label>
-  <input class="fade" type="range" id="fade" min="0" max="100" value="0">
-  <div class="muted">Fade the original OS six-inch map (NLS) over the modern base.</div>
+  <div id="fadewrap">
+    <label style="font-weight:600">OS six-inch map <span class="muted" id="opv">0%</span>
+      <span class="zbadge" id="zbadge">zoom in to activate</span></label>
+    <input class="fade" type="range" id="fade" min="0" max="100" value="0">
+    <div class="muted">Fade the original OS six-inch map (NLS) over the modern base.</div>
+  </div>
 
   <div class="muted" id="cred">Markers coloured by recovered feature type; untyped crowd labels in grey. Feature types read from the OS's own lettering conventions — see the <a href="../characteristic-sheets.html">1897 OS Characteristic (Style) Sheet</a>.</div>
   <div class="muted src">Labels from <a href="../#1-the-source-in-plain-terms">GB1900</a>, the volunteer transcription of the OS six-inch County Series.</div>
@@ -257,6 +264,9 @@ const fade=document.getElementById("fade");
 fade.addEventListener("input",()=>{
   map.setPaintProperty("osmap","raster-opacity",fade.value/100);
   document.getElementById("opv").textContent=fade.value+"%";});
+// the NLS OS six-inch raster has no tiles below zoom 10 — signal that the fader is inactive there
+function updOSz(){document.getElementById("fadewrap").classList.toggle("lowz", map.getZoom() < 10);}
+map.on("zoom",updOSz); map.on("load",updOSz); updOSz();
 </script>
 </body>
 </html>
