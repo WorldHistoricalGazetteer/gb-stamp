@@ -36,10 +36,8 @@ def logo():
   <text x="120" y="58" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-weight="700"
         font-size="21" letter-spacing="2" fill="{CREAM}">GB&#8226;STAMP</text>
   <path d="{GB_PATH}" fill="{CREAM}" transform="translate(81 77) scale(1.46)"/>
-  <text x="120" y="238" text-anchor="middle" font-family="Georgia,serif" font-style="italic"
+  <text x="120" y="240" text-anchor="middle" font-family="Georgia,serif" font-style="italic"
         font-size="12.5" letter-spacing="1" fill="{CREAM}">OS Six-Inch &#183; c.1900</text>
-  <text x="46" y="250" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="15" fill="{CREAM}">1d</text>
-  <text x="194" y="250" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="15" fill="{CREAM}">1d</text>
 </g>
 </svg>'''
 
