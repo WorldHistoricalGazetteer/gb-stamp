@@ -13,7 +13,10 @@
   #map{position:absolute;inset:0}
   .panel{position:absolute;top:12px;left:12px;background:#fffdf7;border:1px solid #d9d2c2;border-radius:8px;
          padding:12px 14px;max-width:296px;box-shadow:0 2px 10px rgba(0,0,0,.14);font-size:13px;line-height:1.45}
-  .panel h1{font-size:17px;margin:0 0 2px;font-family:Georgia,serif}
+  .panel h1{font-size:17px;margin:0;font-family:Georgia,serif}
+  .hdr{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:2px}
+  .hdr img{height:42px;width:auto;flex:0 0 auto}
+  .src{margin-top:8px;font-size:11px}
   .panel a{color:#a5322e}
   .muted{color:#777;font-size:12px}
   .hd{display:flex;justify-content:space-between;align-items:baseline;font-weight:600}
@@ -40,7 +43,7 @@
 <body>
 <div id="map"></div>
 <div class="panel">
-  <h1>GB-STAMP</h1>
+  <div class="hdr"><h1>GB-STAMP</h1><img src="../assets/logo.svg" alt="GB-STAMP"></div>
   <div class="muted" id="count">loading…</div>
 
   <hr>
@@ -58,6 +61,7 @@
   <div class="muted">Fade the original OS six-inch map (NLS) over the modern base.</div>
 
   <div class="muted" id="cred">Markers coloured by recovered feature type; untyped crowd labels in grey. Feature types read from the OS's own lettering conventions — see the <a href="../characteristic-sheets.html">1897 OS Characteristic (Style) Sheet</a>.</div>
+  <div class="muted src">Labels from <a href="../#1-the-source-in-plain-terms">GB1900</a>, the volunteer transcription of the OS six-inch County Series.</div>
 </div>
 <script>
 const PM = new URL("../data/gb_stamp.pmtiles", location.href).href;
