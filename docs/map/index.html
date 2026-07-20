@@ -154,7 +154,8 @@ function sheetPopup(e){
   const read = p.read===true||p.read==="true";
   new maplibregl.Popup({maxWidth:"260px"}).setLngLat(e.lngLat).setHTML(
     `<div class="sh"><h3>Sheet ${esc(p.sheet||p.map||"?")}</h3>`+
-    `<div class="muted">${esc(p.county||"")}${p.country?", "+esc(p.country):""}${p.dates?" · "+esc(p.dates):""}</div>`+
+    `<div class="muted">${esc(p.county||"")}${p.country?", "+esc(p.country):""}</div>`+
+    (p.dates?`<div class="muted">${esc(p.dates).replace(/&lt;br\s*\/?&gt;/gi," · ")}</div>`:"")+
     `<table>`+
     `<tr><td>Crowd labels</td><td class="n">${(+p.crowd).toLocaleString()}</td></tr>`+
     `<tr><td>Typed (AAT)</td><td class="n">${(+p.typed).toLocaleString()} (${pct}%)</td></tr>`+
