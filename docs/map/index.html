@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GB-STAMP — map</title>
+<title>GB-STAMP — interactive map</title>
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -11,51 +11,78 @@
   html,body{margin:0;height:100%;font-family:system-ui,-apple-system,sans-serif}
   #map{position:absolute;inset:0}
   .panel{position:absolute;top:12px;left:12px;background:#fffdf7;border:1px solid #d9d2c2;border-radius:8px;
-         padding:12px 14px;max-width:270px;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:13px;line-height:1.4}
-  .panel h1{font-size:16px;margin:0 0 4px;font-family:Georgia,serif}
+         padding:12px 14px;max-width:280px;box-shadow:0 2px 10px rgba(0,0,0,.14);font-size:13px;line-height:1.45}
+  .panel h1{font-size:17px;margin:0 0 2px;font-family:Georgia,serif}
   .panel a{color:#a5322e}
-  .leg{display:flex;align-items:center;gap:7px;margin-top:5px}
-  .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto}
   .muted{color:#777;font-size:12px}
-  label.tog{display:flex;align-items:center;gap:6px;margin-top:9px;cursor:pointer}
+  .row{display:flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;user-select:none}
+  .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.15)}
+  .row.off{opacity:.4}
+  hr{border:none;border-top:1px solid #e7e0d0;margin:11px 0}
+  .fade{width:100%;margin-top:4px}
   .maplibregl-popup-content{font-family:system-ui,sans-serif;font-size:13px}
-  .pt{font-family:Georgia,serif;font-size:15px;font-weight:700}
+  .pt{font-family:Georgia,serif;font-size:15px;font-weight:700;margin-bottom:2px}
+  #cred{margin-top:9px}
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div class="panel">
   <h1>GB-STAMP</h1>
-  <div class="muted" id="count">loading font-typed labels…</div>
-  <div style="margin-top:8px">Coloured by the Ordnance Survey lettering style recovered from the map:</div>
-  <div class="leg"><span class="dot" style="background:#c07a2b"></span> italic — water &amp; descriptive</div>
-  <div class="leg"><span class="dot" style="background:#3f6fa8"></span> roman upright — settlements &amp; civil</div>
-  <div class="leg"><span class="dot" style="background:#8a4fa0"></span> blackletter — antiquities</div>
-  <div class="leg"><span class="dot" style="background:#777"></span> numeral — heights &amp; bench-marks</div>
-  <label class="tog"><input type="checkbox" id="os"> show OS six-inch map</label>
-  <div class="muted" style="margin-top:9px">A demo of the <a href="../">GB-STAMP</a> output. Click a point for details.
-  Font coverage grows as more sheets are processed.</div>
+  <div class="muted" id="count">loading…</div>
+
+  <hr>
+  <div style="font-weight:600">Lettering style — click to filter</div>
+  <div class="row" data-fs="italic"><span class="dot" style="background:#c07a2b"></span> italic · water &amp; descriptive</div>
+  <div class="row" data-fs="upright"><span class="dot" style="background:#3f6fa8"></span> roman upright · settlements &amp; civil</div>
+  <div class="row" data-fs="blackletter"><span class="dot" style="background:#8a4fa0"></span> blackletter · antiquities</div>
+  <div class="row" data-fs="numeral"><span class="dot" style="background:#777"></span> numeral · heights &amp; bench-marks</div>
+
+  <hr>
+  <label style="font-weight:600">OS six-inch map <span class="muted" id="opv">0%</span></label>
+  <input class="fade" type="range" id="fade" min="0" max="100" value="0">
+  <div class="muted">Slide to fade the original OS six-inch map (NLS) over the modern base.</div>
+
+  <div class="muted" id="cred">A demo of the <a href="../">GB-STAMP</a> output — points are individual at high zoom, a heatmap when zoomed out. Coverage grows as more sheets are processed.</div>
 </div>
 <script>
+const STYLES=["italic","upright","blackletter","numeral"];
+const COLMAP={italic:"#c07a2b",upright:"#3f6fa8",blackletter:"#8a4fa0",numeral:"#777"};
 const COL=["match",["get","fs"],"italic","#c07a2b","upright","#3f6fa8","blackletter","#8a4fa0","numeral","#777","#999"];
+const active=new Set(STYLES);
 const map=new maplibregl.Map({
   container:"map",
-  style:{version:8,sources:{
+  style:{version:8,glyphs:"https://fonts.openmaptiles.org/{fontstack}/{range}.pbf",sources:{
       carto:{type:"raster",tiles:["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"],tileSize:256,
-             attribution:'&copy; OpenStreetMap, &copy; CARTO'},
+             attribution:'&copy; OpenStreetMap contributors, &copy; CARTO'},
       os:{type:"raster",tiles:["https://mapseries-tilesets.s3.amazonaws.com/os/6inchsecond/{z}/{x}/{y}.png"],
-          tileSize:256,minzoom:12,maxzoom:17,attribution:'OS six-inch &copy; National Library of Scotland'}},
+          tileSize:256,minzoom:10,maxzoom:17,attribution:'OS six-inch &copy; National Library of Scotland'}},
     layers:[{id:"base",type:"raster",source:"carto"},
-            {id:"osmap",type:"raster",source:"os",layout:{visibility:"none"}}]},
+            {id:"osmap",type:"raster",source:"os",paint:{"raster-opacity":0}}]},
   center:[-3.0,54.3],zoom:5.4,maxzoom:18
 });
 map.addControl(new maplibregl.NavigationControl(),"top-right");
+map.addControl(new maplibregl.ScaleControl(),"bottom-left");
+
+function filterExpr(){return ["in",["get","fs"],["literal",[...active]]];}
+
 map.on("load",()=>{
   map.addSource("stamp",{type:"geojson",data:"../data/gb_stamp_font.geojson"});
+  // heatmap — dominant when zoomed out
+  map.addLayer({id:"heat",type:"heatmap",source:"stamp",maxzoom:10,paint:{
+    "heatmap-weight":0.6,
+    "heatmap-intensity":["interpolate",["linear"],["zoom"],4,0.8,9,2],
+    "heatmap-radius":["interpolate",["linear"],["zoom"],4,10,9,26],
+    "heatmap-opacity":["interpolate",["linear"],["zoom"],7.5,0.9,10,0],
+    "heatmap-color":["interpolate",["linear"],["heatmap-density"],
+      0,"rgba(0,0,0,0)",0.2,"#f4d9b0",0.45,"#e0a24a",0.7,"#c07a2b",1,"#8a3d1f"]}});
+  // individual points — dominant when zoomed in
   map.addLayer({id:"pts",type:"circle",source:"stamp",paint:{
     "circle-color":COL,
-    "circle-radius":["interpolate",["linear"],["zoom"],5,1.6,9,2.6,13,4.5,16,7],
-    "circle-opacity":0.85,"circle-stroke-width":["interpolate",["linear"],["zoom"],10,0,13,0.6],"circle-stroke-color":"#fff"}});
+    "circle-radius":["interpolate",["linear"],["zoom"],7,1.4,9,2.4,13,4.6,16,7.5],
+    "circle-opacity":["interpolate",["linear"],["zoom"],7,0,9,0.55,11,0.9],
+    "circle-stroke-width":["interpolate",["linear"],["zoom"],10,0,13,0.7],"circle-stroke-color":"#fff"}});
+  map.setFilter("pts",filterExpr()); map.setFilter("heat",filterExpr());
   map.on("click","pts",e=>{
     const p=e.features[0].properties;
     new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
@@ -68,8 +95,17 @@ map.on("load",()=>{
   fetch("../data/gb_stamp_font.geojson").then(r=>r.json()).then(d=>{
     document.getElementById("count").textContent=d.features.length.toLocaleString()+" font-typed labels";});
 });
-document.getElementById("os").addEventListener("change",e=>{
-  map.setLayoutProperty("osmap","visibility",e.target.checked?"visible":"none");});
+// style filter
+document.querySelectorAll(".row[data-fs]").forEach(el=>el.addEventListener("click",()=>{
+  const fs=el.dataset.fs;
+  if(active.has(fs)){active.delete(fs);el.classList.add("off");}else{active.add(fs);el.classList.remove("off");}
+  if(map.getLayer("pts")){map.setFilter("pts",filterExpr());map.setFilter("heat",filterExpr());}
+}));
+// OS six-inch fade
+const fade=document.getElementById("fade");
+fade.addEventListener("input",()=>{
+  map.setPaintProperty("osmap","raster-opacity",fade.value/100);
+  document.getElementById("opv").textContent=fade.value+"%";});
 </script>
 </body>
 </html>

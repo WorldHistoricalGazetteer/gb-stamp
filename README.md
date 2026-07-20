@@ -8,6 +8,8 @@ GB1900 is a volunteer transcription of every text label on the Ordnance Survey s
 
 The Ordnance Survey, however, encoded feature type in its **typography** — italic for water, blackletter for antiquities, roman for settlements, and distinct capitals for each rung of the administrative hierarchy, as documented in its "Characteristic Sheets". **GB-STAMP recovers that lost styling from the scanned maps and turns it back into feature types**, fusing the typographic signal with text-based rules and aligning the result to the Getty Art & Architecture Thesaurus.
 
+### 🗺️ [**Explore the interactive map »**](https://worldhistoricalgazetteer.github.io/gb-stamp/map/)
+
 ## Read more
 
 - **[Methodology](https://worldhistoricalgazetteer.github.io/gb-stamp/)** — the source, the limitations of plain GB1900 and its abridgement, and how the method works (plain-terms + academic).
@@ -20,7 +22,7 @@ The Ordnance Survey, however, encoded feature type in its **typography** — ita
 
 ## Acknowledgements
 
-Builds on **GB1900** (Great Britain Historical GIS / *A Vision of Britain through Time* — Humphrey Southall, University of Portsmouth — with the National Library of Scotland, Aberystwyth University, and People's Collection Wales). Characteristic-Sheet scans by the **National Library of Scotland** (CC-BY); feature types from the Getty **AAT** (ODC-BY). Computation ran on the **University of Pittsburgh Center for Research Computing and Data** (RRID:SCR_022735), supported by NIH award S10OD028483 and NSF award OAC-2117681. Developed by **Stephen Gadd** within the [World Historical Gazetteer](https://whgazetteer.org).
+Builds on **GB1900** (Great Britain Historical GIS / *A Vision of Britain through Time* — Humphrey Southall, University of Portsmouth — with the National Library of Scotland, Aberystwyth University, and People's Collection Wales). Labels are located with **[MapReader](https://github.com/Living-with-machines/MapReader)** (Living with Machines / The Alan Turing Institute; Katherine McDonough et al.). Characteristic-Sheet scans by the **National Library of Scotland** (CC-BY); feature types from the Getty **AAT** (ODC-BY). Computation ran on the **University of Pittsburgh Center for Research Computing and Data** (RRID:SCR_022735), supported by NIH award S10OD028483 and NSF award OAC-2117681. Developed by **Stephen Gadd** within the [World Historical Gazetteer](https://whgazetteer.org).
 
 ## Licence
 

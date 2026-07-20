@@ -54,7 +54,7 @@ GB1900 volunteers transcribed the *words* but, understandably, not the *style* t
 
 ### How it works, step by step
 
-1. **Find the words on the map.** Starting from each GB1900 point, we locate the corresponding label on the scanned map image and delineate it cleanly with a modern map text-spotting model. This gives us a tidy picture of each label in its original font — not just the transcribed text.
+1. **Find the words on the map.** Starting from each GB1900 point, we locate the corresponding label on the scanned map image and delineate it cleanly with **[MapReader](https://github.com/Living-with-machines/MapReader)**, a text-spotting toolkit for historical maps. This gives us a tidy picture of each label in its original font — not just the transcribed text.
 2. **Read the letterforms.** We compare each label's lettering against the Characteristic-Sheet conventions and against a set of examples verified by eye. Because the *same letter* in different styles is the cleanest signal (an italic *a* versus an upright *a*), we compare letter-for-letter, and we learn a compact "style fingerprint" for each letterform from the millions of unlabelled examples the maps provide.
 3. **Combine style with text.** The words themselves already carry a great deal of type information — `Tumulus` is self-evidently an antiquity, `Ford` a water crossing, `B.M.` a bench-mark — so we **fuse the typographic signal with text-based rules**. Each reinforces the other: the text resolves cases the font cannot, and the font resolves the many ordinary place-names that the text alone leaves ambiguous.
 4. **Map to a shared vocabulary.** Finally, the recovered types are aligned to a standard controlled vocabulary (the Getty **Art & Architecture Thesaurus**), so the enriched gazetteer can be searched, filtered, and linked to other datasets.
@@ -98,6 +98,7 @@ If it works, GB-STAMP adds the one thing GB1900 lacks: a **feature-type layer** 
 ## Acknowledgements
 
 - **GB1900** was created by thousands of volunteers and by the **Great Britain Historical GIS / A Vision of Britain through Time** (**Humphrey Southall**, University of Portsmouth), the **National Library of Scotland**, **Aberystwyth University**, and **People's Collection Wales**. GB-STAMP builds directly on their work.
+- Labels are located and delineated with **[MapReader](https://github.com/Living-with-machines/MapReader)** (Living with Machines / The Alan Turing Institute; **Katherine McDonough** et al.).
 - The **Ordnance Survey Characteristic Sheets** are reproduced from scans by the **[National Library of Scotland](https://maps.nls.uk/view/128076792)** (CC-BY).
 - Feature types use the Getty **Art & Architecture Thesaurus (AAT)**, made available under the [ODC Attribution License](https://www.getty.edu/research/tools/vocabularies/license.html).
 - Computation ran on the **HTC, H2P, and GPU clusters at the University of Pittsburgh Center for Research Computing and Data** (RRID:SCR_022735), supported by NIH award S10OD028483 and NSF award OAC-2117681.
