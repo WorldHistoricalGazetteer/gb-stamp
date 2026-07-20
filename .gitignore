@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.env
+.env.local
+data/
+*.pmtiles
+*.parquet
+*.jsonl
+.DS_Store
