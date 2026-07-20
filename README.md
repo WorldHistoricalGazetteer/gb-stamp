@@ -1,4 +1,4 @@
-<img src="docs/assets/logo.svg" alt="GB-STAMP" align="right" width="130">
+<p align="center"><img src="docs/assets/logo.svg" alt="GB-STAMP" width="150"></p>
 
 # GB-STAMP
 
