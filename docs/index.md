@@ -77,11 +77,11 @@ This is a research method, and we are reporting it *before* the final numbers so
 
 **Where the value really is:** the font *disambiguates text*. "Camp", "Castle", "Cross", "Stone" mean an *antiquity* in blackletter but a modern feature in roman/italic — so typing is **font-conditioned**. A companion analysis mines the corpus for exactly which words are font-ambiguous (e.g. *Street* → roman 541:8; *Spring* → italic 319:3; *Stone* → mostly italic with a blackletter tail) to build those rules empirically.
 
-**Coverage:** so far **85 map sheets** have been processed → ~30,500 font-classified word-boxes → the first edition below. Coverage is bounded only by how many sheets have been spotted, and is expanding.
+**Coverage:** the current edition assigns a feature type to **871,359 of the 2,666,341 labels (32.7%)**, across **15 Getty-AAT-aligned classes** — derived from the OS-grounded lexicon, the OS single-letter abbreviations (e.g. a standalone italic *W* = *well*, ~191k labels), and the font signal where a sheet has been read. Because most of that typing rests on the text and the abbreviation conventions, it is **already national in scope** and does not wait on font-spotting. The typographic reading itself is being extended across **all 35,514 label-bearing map regions** (a resumable GPU job), which progressively enriches the font-conditioned cases; the remaining ~67% of labels are as yet untyped and are shown in grey on the map.
 
 ## Getting the data
 
-The enriched gazetteer is published as a **[GitHub Release](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases)** — the simplest "download directly from GitHub" route. The current preview, **[v0.1.0-alpha](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases/tag/v0.1.0-alpha)**, contains the full **2,666,341-record** edition (gzipped JSONL, ~60 MB) and the font-typed labels as GeoJSON. Each record carries the raw text + coordinates (CC0 raw dump), a clean feature type + Getty AAT mapping, and the recovered lettering style where processed.
+The enriched gazetteer is published as a **[GitHub Release](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases)** — the simplest "download directly from GitHub" route. The current preview, **[v0.1.0-alpha](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases/tag/v0.1.0-alpha)**, contains the full **2,666,341-record** edition (gzipped JSONL, ~60 MB). Each record carries the raw text + coordinates (CC0 raw dump), a clean feature type + Getty AAT mapping where assigned, and the recovered lettering style where the sheet has been read.
 
 **[→ Browse the interactive map](map/)** · **[web-map feasibility / scale-up note](webmap.md)**
 
