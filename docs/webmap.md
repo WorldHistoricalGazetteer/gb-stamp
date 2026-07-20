@@ -18,10 +18,15 @@ Rendering millions of points client-side is routine now using **vector tiles**:
 
 2.67M points is comfortably within what this stack handles smoothly. Expect a PMTiles archive on the order of a few hundred MB depending on how many attributes we carry per point.
 
-**One caveat about hosting.** GitHub Pages caps individual files at ~100 MB and applies soft bandwidth limits, so a multi-hundred-MB PMTiles file should **not** live in the repo. The clean pattern is:
+### Where does the big tile file live? — GitHub Releases largely solve it
 
-- **GitHub Pages** hosts the small static app (HTML/JS/CSS) and enables the whole thing to be free and versioned.
-- **The PMTiles archive lives on cheap object storage** that supports range requests — Cloudflare R2 (generous free tier), Source Cooperative, or similar. MapLibre reads it directly from there; no server, no per-request cost of note.
+GitHub Pages caps individual files at ~100 MB, applies soft bandwidth limits, and — crucially — does **not** reliably support the **HTTP range requests** that PMTiles depends on. So a multi-hundred-MB PMTiles archive should not sit in the Pages tree. Three options, best first:
+
+1. **GitHub Releases (recommended).** A **Release asset can be up to 2 GB**, does not count against the repo or Pages limits, and is served from a CDN that **does support range requests** — so **MapLibre can read a single PMTiles archive directly from a Release**, and the enriched dataset can be downloaded directly from the same Release. This keeps *everything on GitHub*: the app on Pages, the tiles and data as Release assets.
+2. **External object storage** — Cloudflare R2 (generous free tier), Source Cooperative, or similar. Also range-friendly; useful if bandwidth grows beyond GitHub's fair-use comfort zone.
+3. **Splitting for Pages itself** — possible but awkward. Because Pages lacks reliable range support, you would either shard the corpus into many small per-region PMTiles archives *each fetched whole* (works, but loses PMTiles' efficiency), or fall back to a classic **static tile pyramid** of individual `z/x/y.pbf` vector tiles served as plain files (works on Pages with no range requests, but is tens of thousands of small files). Given that Releases remove the need, this is rarely worth it.
+
+**So: yes, a Release sidesteps the storage *and* the range-request problem** — it is the cleanest all-GitHub answer for both the tiles and the downloadable dataset.
 
 ## Search: achievable, with the right index (and this is where IndexedDB earns its place)
 
@@ -33,23 +38,26 @@ Free-text search over 2.67M labels is the genuinely interesting part. Three tier
 
 **What IndexedDB is for**, concretely: it is the browser's durable store for the downloaded search-index shards and any per-point attribute blobs, so the app is fast on return visits, resilient to reloads, and usable offline. With the Persistent Storage permission, browsers will hold hundreds of MB to a few GB — ample for a sharded index. It is *not* the right tool for the spatial rendering itself (that is PMTiles' job).
 
-## Recommended architecture
+## Recommended architecture — all on GitHub
 
 ```
   ┌── GitHub Pages (free, versioned) ───────────────┐
   │   static app: MapLibre + UI + search glue        │
   └───────────────┬──────────────────────────────────┘
-                  │ range requests
-     ┌────────────┴───────────────┐
-     │ object storage (R2 / Source Co-op)          │
+                  │ HTTP range requests (supported by Release CDN)
+     ┌────────────┴───────────────────────────────┐
+     │ GitHub Release assets (≤ 2 GB each)         │
      │  • gb-stamp.pmtiles   (the map)             │
+     │  • gb-stamp.parquet   (downloadable data)   │
      │  • search shards      (fuzzy index)         │
-     └────────────┬───────────────┘
+     └────────────┬───────────────────────────────┘
                   │ cached in
             ┌─────┴──────┐
             │ IndexedDB   │  index shards + attributes; offline + instant repeat visits
             └────────────┘
 ```
+
+(Swap the Release layer for Cloudflare R2 / Source Cooperative only if bandwidth outgrows GitHub's fair use.)
 
 ## Honest limits
 

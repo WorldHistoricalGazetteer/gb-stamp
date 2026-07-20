@@ -7,3 +7,7 @@ data/
 *.parquet
 *.jsonl
 .DS_Store
+
+# keep small reference data
+!reference/
+reference/*.jsonl
