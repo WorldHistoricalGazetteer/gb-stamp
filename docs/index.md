@@ -67,7 +67,7 @@ This is a research method, and we are reporting it *before* the final numbers so
 
 ## 4. Getting the data
 
-The enriched gazetteer will be published as a **[GitHub Release](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases)** on this repository — the simplest possible "download directly from GitHub" route (release assets allow up to 2 GB per file and are served over a CDN). We expect the typed corpus to be a modest download: 2.67 million records with a handful of fields, distributed as compressed **Parquet** and **GeoJSONL**, is on the order of tens of megabytes. A browsable, searchable map interface is also planned — see the **[web-map feasibility note](webmap.md)**.
+The enriched gazetteer will be published as a **[GitHub Release](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases)** on this repository — the simplest possible "download directly from GitHub" route (release assets allow up to 2 GB per file and are served over a CDN). We expect the typed corpus to be a modest download: 2.67 million records with a handful of fields, distributed as compressed **Parquet** and **GeoJSONL**, is on the order of tens of megabytes. **[→ Browse the interactive map](map/)** (a first demo, showing the font-typed labels; coverage grows as more sheets are processed). A browsable, searchable map interface is also planned — see the **[web-map feasibility note](webmap.md)**.
 
 *Releases will appear once the typing is validated.*
 

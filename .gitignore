@@ -11,3 +11,6 @@ data/
 # keep small reference data
 !reference/
 reference/*.jsonl
+
+!docs/data/
+!docs/data/*.geojson

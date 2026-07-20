@@ -12,6 +12,7 @@ The Ordnance Survey, however, encoded feature type in its **typography** — ita
 
 - **[Methodology](https://worldhistoricalgazetteer.github.io/gb-stamp/)** — the source, the limitations of plain GB1900 and its abridgement, and how the method works (plain-terms + academic).
 - **[Characteristic-Sheet extraction](https://worldhistoricalgazetteer.github.io/gb-stamp/characteristic-sheets)** — every OS writing category, with exemplars, letterforms, and AAT mappings.
+- **[Interactive map](https://worldhistoricalgazetteer.github.io/gb-stamp/map/)** — a first demo (font-typed labels, coloured by OS lettering style).
 - **[Web-map feasibility](https://worldhistoricalgazetteer.github.io/gb-stamp/webmap)** — a static, serverless, searchable MapLibre interface over 2.67M points (PMTiles + IndexedDB, hosted from GitHub Releases).
 - **[Licensing](https://worldhistoricalgazetteer.github.io/gb-stamp/licensing)**.
 
