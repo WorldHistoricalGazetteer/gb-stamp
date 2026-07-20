@@ -13,10 +13,18 @@
   #map{position:absolute;inset:0}
   .panel{position:absolute;top:12px;left:12px;background:#fffdf7;border:1px solid #d9d2c2;border-radius:8px;
          padding:12px 14px;max-width:296px;box-shadow:0 2px 10px rgba(0,0,0,.14);font-size:13px;line-height:1.45}
-  .panel h1{font-size:17px;margin:0;font-family:Georgia,serif}
-  .hdr{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:2px}
-  .hdr img{height:42px;width:auto;flex:0 0 auto}
+  a.hdr{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;
+        text-decoration:none;color:inherit;cursor:pointer}
+  a.hdr:hover .h1{text-decoration:underline}
+  .hdr-l{display:flex;flex-direction:column;min-width:0}
+  .hdr .h1{font-size:17px;font-family:Georgia,serif;font-weight:700;color:#2a2320}
+  .hdr img{height:50px;width:auto;flex:0 0 auto}
   .src{margin-top:8px;font-size:11px}
+  .pie{display:flex;align-items:center;gap:9px;margin-top:5px}
+  .pie svg{flex:0 0 auto}
+  .pie .leg{font-size:12px;line-height:1.4}
+  .pie .leg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:baseline}
+  .pie .leg b{font-variant-numeric:tabular-nums;color:#555;font-weight:400}
   .panel a{color:#a5322e}
   .muted{color:#777;font-size:12px}
   .hd{display:flex;justify-content:space-between;align-items:baseline;font-weight:600}
@@ -43,8 +51,10 @@
 <body>
 <div id="map"></div>
 <div class="panel">
-  <div class="hdr"><h1>GB-STAMP</h1><img src="../assets/logo.svg" alt="GB-STAMP"></div>
-  <div class="muted" id="count">loading…</div>
+  <a class="hdr" href="../" title="GB-STAMP — Semantic Typing of Antiquarian Map Placenames · click for the documentation">
+    <span class="hdr-l"><span class="h1">GB-STAMP</span><span class="muted" id="count">loading…</span></span>
+    <img src="../assets/logo.svg" alt="GB-STAMP">
+  </a>
 
   <hr>
   <div class="hd"><span>Feature type (AAT)</span>
@@ -53,7 +63,7 @@
 
   <hr>
   <label class="toggle"><input type="checkbox" id="sheets"> <span style="font-weight:600">OS six-inch sheet outlines</span></label>
-  <div class="muted">Toggle the map's sheet grid; click a sheet for its dates and label/coverage stats.</div>
+  <div class="muted">Toggle the map's sheet grid; click a sheet for its dates and label/coverage stats. <b>Markers can't be clicked while outlines are shown.</b></div>
 
   <hr>
   <label style="font-weight:600">OS six-inch map <span class="muted" id="opv">0%</span></label>
@@ -84,7 +94,10 @@ const map=new maplibregl.Map({
           tileSize:256,minzoom:10,maxzoom:17,attribution:'OS six-inch &copy; National Library of Scotland'}},
     layers:[{id:"base",type:"raster",source:"carto"},
             {id:"osmap",type:"raster",source:"os",paint:{"raster-opacity":0}}]},
-  center:[-3.0,54.3],zoom:5.4,maxzoom:18
+  // whole GB1900 crowd extent — Scilly (~49.9°N) up to Unst, Shetland (~60.9°N); pad left for the panel
+  bounds:[[-8.8,49.8],[2.2,61.2]],
+  fitBoundsOptions:{padding:{left:312,top:24,right:24,bottom:24}},
+  maxzoom:18
 });
 map.addControl(new maplibregl.NavigationControl(),"top-right");
 map.addControl(new maplibregl.ScaleControl(),"bottom-left");
@@ -151,6 +164,28 @@ fetch(TYPES_URL).then(r=>r.json()).then(td=>{
 
 // ---- sheet-outline overlay (lazy-loaded on first toggle) ----
 function esc(s){return (s==null?"":(""+s)).replace(/</g,"&lt;");}
+const FCOL={italic:"#c07a2b",upright:"#3f6fa8",blackletter:"#8a4fa0",numeral:"#777"};
+function pieSVG(parts){
+  const tot=parts.reduce((a,p)=>a+p[1],0)||1; let a0=-Math.PI/2; const R=22,C=24; let paths="";
+  parts.forEach(([f,c])=>{
+    const frac=c/tot, a1=a0+2*Math.PI*frac;
+    if(parts.length===1){paths=`<circle cx="${C}" cy="${C}" r="${R}" fill="${FCOL[f]||'#bbb'}"/>`;return;}
+    const x0=C+R*Math.cos(a0),y0=C+R*Math.sin(a0),x1=C+R*Math.cos(a1),y1=C+R*Math.sin(a1);
+    const large=(a1-a0)>Math.PI?1:0;
+    paths+=`<path d="M${C} ${C} L${x0.toFixed(1)} ${y0.toFixed(1)} A${R} ${R} 0 ${large} 1 ${x1.toFixed(1)} ${y1.toFixed(1)} Z" fill="${FCOL[f]||'#bbb'}"/>`;
+    a0=a1;
+  });
+  return `<svg width="48" height="48" viewBox="0 0 48 48">${paths}</svg>`;
+}
+function fontPie(ft){
+  if(!ft) return "";
+  const parts=(""+ft).split("|").map(s=>{const i=s.lastIndexOf(" ");return [s.slice(0,i),parseFloat(s.slice(i+1))];})
+                     .filter(p=>p[0]&&!isNaN(p[1]));
+  if(!parts.length) return "";
+  const tot=parts.reduce((a,p)=>a+p[1],0)||1;
+  const leg=parts.map(([f,c])=>`<div><i style="background:${FCOL[f]||'#bbb'}"></i>${esc(f)} <b>${(100*c/tot).toFixed(0)}%</b></div>`).join("");
+  return `<div style="margin-top:5px"><b>lettering — top 3:</b></div><div class="pie">${pieSVG(parts)}<div class="leg">${leg}</div></div>`;
+}
 function sheetPopup(e){
   const p=e.features[0].properties;
   let top=""; try{ const t=JSON.parse(p.top||"[]"); if(t.length) top=t.map(x=>`${esc(x.k).replace(/_/g," ")} ${x.n}`).join(", "); }catch(_){}
@@ -213,7 +248,8 @@ map.on("load",()=>{
       `<div class="pt">${esc(p.t)}</div>`+
       `<div><b>type:</b> ${p.ty==="untyped"?'<span class="muted">untyped</span>':esc(p.ty)}`+
       `${p.aat?` <span class="muted">(AAT: ${esc(p.aat)})</span>`:""}</div>`+
-      (p.fs?`<div><b>lettering:</b> ${esc(p.fs)}${p.src?` <span class="muted">(${esc(p.src)})</span>`:""}</div>`:"")).addTo(map);
+      (p.ft?fontPie(p.ft)
+           :p.fs?`<div><b>lettering:</b> ${esc(p.fs)}${p.src?` <span class="muted">(${esc(p.src)})</span>`:""}</div>`:"")).addTo(map);
   });
 });
 
