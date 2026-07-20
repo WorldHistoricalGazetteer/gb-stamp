@@ -3,6 +3,8 @@ title: GB-STAMP
 description: Recovering feature types for the GB1900 gazetteer from Ordnance Survey map typography
 ---
 
+<img src="assets/logo.svg" alt="GB-STAMP" align="right" width="132" style="margin:0 0 8px 16px">
+
 # GB-STAMP
 
 **GB-STAMP — *Semantic Typing of Antiquarian Map Placenames*** — gives the [GB1900](https://www.visionofbritain.org.uk/gb1900) gazetteer a sense of **what** each place is, not just its name and location, by reading the Ordnance Survey's own map **typography**. (The name is also a small pun: the Ordnance Survey *stamped* a distinct lettering style onto every kind of feature when it engraved its plates; GB-STAMP reads that stamp back.)

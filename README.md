@@ -1,3 +1,5 @@
+<img src="docs/assets/logo.svg" alt="GB-STAMP" align="right" width="130">
+
 # GB-STAMP
 
 **Semantic Typing of Antiquarian Map Placenames** — recovering feature types for the [GB1900](https://www.visionofbritain.org.uk/gb1900) gazetteer from Ordnance Survey map typography.
