@@ -23,4 +23,4 @@ Builds on **GB1900** (Great Britain Historical GIS / *A Vision of Britain throug
 
 ## Licence
 
-**Code: MIT. Data & documentation: CC-BY-SA 4.0** (the most open licence compatible with GB1900's own share-alike terms). **Any re-use must credit Stephen Gadd and the World Historical Gazetteer.** See [`LICENSE`](LICENSE) and [licensing](https://worldhistoricalgazetteer.github.io/gb-stamp/licensing).
+**Code: MIT. Data & documentation: CC-BY 4.0** (the GB1900 raw dump is CC0, so CC-BY is the most open licence compatible with the attribution-bearing sources). **Any re-use must credit Stephen Gadd and the World Historical Gazetteer.** See [`LICENSE`](LICENSE) and [licensing](https://worldhistoricalgazetteer.github.io/gb-stamp/licensing).

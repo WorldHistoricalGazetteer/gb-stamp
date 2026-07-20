@@ -25,5 +25,8 @@ NOTE ON DATA AND DOCUMENTATION
 
 This MIT licence covers the SOURCE CODE only. The GB-STAMP dataset(s) and the
 documentation in `docs/` are licensed separately under Creative Commons
-Attribution-ShareAlike 4.0 International (CC-BY-SA 4.0), because they derive from
-GB1900, which is itself CC-BY-SA. See docs/licensing.md.
+Attribution 4.0 International (CC-BY 4.0). GB-STAMP takes its raw text and
+coordinates from the GB1900 raw dump (CC0), so no share-alike applies; CC-BY is
+the most open licence compatible with the attribution-bearing sources (OS
+Characteristic Sheets via NLS, CC-BY; Getty AAT, ODC-BY). Re-use must credit
+Stephen Gadd and the World Historical Gazetteer. See docs/licensing.md.

@@ -89,4 +89,4 @@ If it works, GB-STAMP adds the one thing GB1900 lacks: a **feature-type layer** 
 
 ## Licence
 
-See **[Licensing](licensing.md)**. In brief: the **code** is MIT; the **data and documentation** are **CC-BY-SA 4.0** (the most open licence compatible with GB1900's own share-alike terms). **Any re-use must credit Stephen Gadd and the World Historical Gazetteer**, alongside GB1900 and the other upstream sources.
+See **[Licensing](licensing.md)**. In brief: the **code** is MIT; the **data and documentation** are **CC-BY 4.0** (the most open licence compatible with the sources — the GB1900 raw dump is CC0, so no share-alike applies). **Any re-use must credit Stephen Gadd and the World Historical Gazetteer**, alongside GB1900 and the other upstream sources.
