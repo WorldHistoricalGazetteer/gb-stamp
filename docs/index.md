@@ -65,11 +65,27 @@ This is a research method, and we are reporting it *before* the final numbers so
 
 ---
 
-## 4. Getting the data
+## 4. Results so far
 
-The enriched gazetteer will be published as a **[GitHub Release](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases)** on this repository — the simplest possible "download directly from GitHub" route (release assets allow up to 2 GB per file and are served over a CDN). We expect the typed corpus to be a modest download: 2.67 million records with a handful of fields, distributed as compressed **Parquet** and **GeoJSONL**, is on the order of tens of megabytes. **[→ Browse the interactive map](map/)** (a first demo, showing the font-typed labels; coverage grows as more sheets are processed). A browsable, searchable map interface is also planned — see the **[web-map feasibility note](webmap.md)**.
+*Preliminary — the method is validated on a human-labelled sample; corpus-wide coverage is still growing.*
 
-*Releases will appear once the typing is validated.*
+**Does the font signal work?** On word-labels hand-labelled by eye (from the processed sheets), we recover the OS lettering style by matching each letter against human-verified examples — letter-for-letter, so *content* is controlled. Leave-one-label-out:
+
+- **italic vs upright roman ≈ 0.82** — the single hardest distinction, because the OS italic serif is only mildly sloped;
+- **three-way (italic / roman / blackletter) ≈ 0.75**, and, keeping only confident calls, **≈ 0.85 over ~55% of labels**;
+- **italic** (water & descriptive names) is reliable; **blackletter** (antiquities) is usable; the **upright↔italic serif boundary is a genuine typographic ceiling** — more data *and* a learned neural embedding both land in the same place, so we treat that axis as confidence-weighted rather than decisive.
+
+**Where the value really is:** the font *disambiguates text*. "Camp", "Castle", "Cross", "Stone" mean an *antiquity* in blackletter but a modern feature in roman/italic — so typing is **font-conditioned**. A companion analysis mines the corpus for exactly which words are font-ambiguous (e.g. *Street* → roman 541:8; *Spring* → italic 319:3; *Stone* → mostly italic with a blackletter tail) to build those rules empirically.
+
+**Coverage:** so far **85 map sheets** have been processed → ~30,500 font-classified word-boxes → the first edition below. Coverage is bounded only by how many sheets have been spotted, and is expanding.
+
+## Getting the data
+
+The enriched gazetteer is published as a **[GitHub Release](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases)** — the simplest "download directly from GitHub" route. The current preview, **[v0.1.0-alpha](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases/tag/v0.1.0-alpha)**, contains the full **2,666,341-record** edition (gzipped JSONL, ~60 MB) and the font-typed labels as GeoJSON. Each record carries the raw text + coordinates (CC0 raw dump), a clean feature type + Getty AAT mapping, and the recovered lettering style where processed.
+
+**[→ Browse the interactive map](map/)** · **[web-map feasibility / scale-up note](webmap.md)**
+
+*Alpha preview: typing is clean-process only (no legacy tokens), and font coverage is partial and growing.*
 
 ---
 
