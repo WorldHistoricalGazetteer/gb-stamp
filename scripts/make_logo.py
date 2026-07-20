@@ -4,10 +4,9 @@ import os
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CARMINE, CREAM, CAMEO = "#a5322e", "#f4ecdb", "#87231f"
 
-# left-facing Victorian profile silhouette (fits a ~ x[74..152] y[90..206] box)
-PROFILE = ("M126 90 C150 92 158 118 152 146 C150 166 148 176 146 186 L146 206 L98 206 L98 188 "
-           "C96 180 92 176 90 170 C88 166 92 160 88 156 C80 154 82 148 90 148 C86 144 92 142 90 138 "
-           "C78 136 74 132 86 128 C90 124 90 120 94 118 C96 108 100 96 126 90 Z")
+# Great Britain mainland outline (Natural Earth 1:50m, aspect-corrected, portrait 53.5 x 100).
+GBW = 53.5
+GB_PATH = open(f"{HERE}/reference/gb_outline_path.txt").read().strip()
 
 def perf_mask(x0, y0, x1, y1, r, nh, nv, rx=6):
     circ = []
@@ -36,9 +35,7 @@ def logo():
   {corners}
   <text x="120" y="58" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-weight="700"
         font-size="21" letter-spacing="2" fill="{CREAM}">GB&#8226;STAMP</text>
-  <ellipse cx="120" cy="150" rx="54" ry="66" fill="{CAMEO}" stroke="{CREAM}" stroke-width="2"/>
-  <ellipse cx="120" cy="150" rx="49" ry="61" fill="none" stroke="{CREAM}" stroke-width="0.8"/>
-  <path d="{PROFILE}" fill="{CREAM}"/>
+  <path d="{GB_PATH}" fill="{CREAM}" transform="translate(81 77) scale(1.46)"/>
   <text x="120" y="238" text-anchor="middle" font-family="Georgia,serif" font-style="italic"
         font-size="12.5" letter-spacing="1" fill="{CREAM}">OS Six-Inch &#183; c.1900</text>
   <text x="46" y="250" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="15" fill="{CREAM}">1d</text>
@@ -49,15 +46,12 @@ def logo():
 def favicon():
     W = 64
     mask = perf_mask(4, 4, 60, 60, 3.4, 9, 9, rx=3)
-    # scale profile (src box ~ x74..152 y90..206 -> center 113,148 span 78x116) into ~ 16..48
-    sc = 40 / 116.0
+    s = 52 / 100.0                                # GB fills most of the stamp for 16px legibility
+    tx, ty = 32 - GBW * s / 2, 33 - 52 / 2        # centre at (32,33)
     return f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {W}" role="img" aria-label="GB-STAMP">
 <defs><mask id="pf">{mask}</mask></defs>
 <rect x="4" y="4" width="56" height="56" rx="3" fill="{CARMINE}" mask="url(#pf)"/>
-<g mask="url(#pf)">
-  <ellipse cx="32" cy="33" rx="20" ry="23" fill="{CAMEO}" stroke="{CREAM}" stroke-width="1.4"/>
-  <path d="{PROFILE}" fill="{CREAM}" transform="translate(32 33) scale({sc}) translate(-113 -148)"/>
-</g>
+<path d="{GB_PATH}" fill="{CREAM}" transform="translate({tx:.1f} {ty:.1f}) scale({s:.3f})"/>
 </svg>'''
 
 os.makedirs(f"{HERE}/docs/assets", exist_ok=True)
