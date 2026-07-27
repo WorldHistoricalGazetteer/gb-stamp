@@ -54,26 +54,113 @@ GB1900 volunteers transcribed the *words* but, understandably, not the *style* t
 
 ### How it works, step by step
 
-1. **Find the words on the map.** Starting from each GB1900 point, we locate the corresponding label on the scanned map image and delineate it cleanly with **[MapReader](https://github.com/maps-as-data/MapReader)**, a text-spotting toolkit for historical maps. This gives us a tidy picture of each label in its original font — not just the transcribed text.
-2. **Learn the OS alphabet, face by face.** Each Characteristic-Sheet exemplar gives us a single letter of one OS writing face. From that one seed we grow the whole alphabet: we find that letter across the real maps by matching letter-shapes, and from the confident matches we harvest the *other* letters of the same face — repeating until we have a real-map alphabet for **every** style the OS used — water, the four antiquity hands, the settlement roman, and each administrative capital. Font is read from the letterforms alone — the *same* letter compared against the *same* letter — so what a label *says* never leaks into what face it is judged to be.
-3. **Best three guesses, then arbitrate with text.** Some OS faces are genuinely alike — and a few categories were engraved in an *identical* face — so each label gets a ranked **top-three** font reading with confidences, not a single verdict. Those three are then re-weighted by evidence the letterforms cannot see: which words co-occur with which face across the whole corpus, and independent records of the very civic status the OS capitals were themselves encoding — administrative areas, market towns, parliamentary representation.
-4. **Map to a shared vocabulary.** Finally, the recovered types are aligned to a standard controlled vocabulary (the Getty **Art & Architecture Thesaurus**), so the enriched gazetteer can be searched, filtered, and linked to other datasets.
+1. **Find the words on the map.** We locate the text on the scanned map image and delineate it cleanly with
+   **[MapReader](https://github.com/maps-as-data/MapReader)**, a text-spotting toolkit for historical maps.
+   This gives a tidy picture of each word in its original font — not just the transcribed text.
+2. **Join the words into labels.** A spotter finds *words*; a gazetteer needs *labels*, and many OS labels
+   run to several words or several lines. Each word's own typography — its direction, cap height and
+   character pitch — says where its continuation must be, and a label set on more than one line is
+   recognised by its lines sharing a size, a direction and a common perpendicular centre. GB1900 is an
+   unusually good test set for this step, because a volunteer's transcription names every word of a label,
+   so the join can be scored without any new annotation.
+   **[→ How the join works, and what it achieves](label-assembly.md)**
+3. **Read the lettering face.** Every label is compared against a set of verified real-map reference
+   examples for each OS writing face, letter against like letter, so what a label *says* never leaks into
+   what face it is judged to be. Whole-word slant — measured by searching for the shear that best squares up
+   the word, not by the lean of its ink — is fused in as an independent signal.
+4. **Best three guesses, then arbitrate with text.** Some OS faces are genuinely alike, and a few categories
+   were engraved in an *identical* face, so each label gets a ranked **top-three** reading with confidences
+   rather than a single verdict. Those are then re-weighted by evidence the letterforms cannot see: which
+   words co-occur with which face across the corpus, and independent records of the civic status the OS
+   capitals were themselves encoding.
+5. **Map to a shared vocabulary.** The recovered types are aligned to the Getty **Art & Architecture
+   Thesaurus**, so the enriched gazetteer can be searched, filtered and linked to other datasets.
 
 ### What is honest to say at this stage
 
-This is a research method, and we are reporting it *before* the final numbers so the approach can be scrutinised. The letterform signal is strongest for the visually distinctive faces — the ornate administrative capitals, the blackletter antiquity hands, the numerals — and weakest for the plain serif faces used for ordinary names, which even a careful eye finds marginal at this map scale. Where two OS categories were engraved in the *same* face they are inseparable by design; rather than pretend to split them, we identify such pairs and merge them under human review. The best-three-guesses output, with the text and civic re-weighting, is built precisely so that hard or shared faces degrade gracefully instead of producing false certainty. Full evaluation — including which faces the maps actually let us distinguish — will be published here.
+This is a research method, and we report it *before* the final numbers so the approach can be scrutinised.
+The letterform signal is strongest for the visually distinctive faces — the ornate administrative capitals,
+the blackletter antiquity hands, the numerals — and weakest for the plain serif faces used for ordinary
+names, which even a careful eye finds marginal at this map scale. Where two OS categories were engraved in
+the *same* face they are inseparable by design; rather than pretend to split them, we identify such pairs
+and merge them under human review. The best-three output, with the text and civic re-weighting, exists
+precisely so that hard or shared faces degrade gracefully instead of producing false certainty.
+
+The method is **specific to this map series**, by choice. Earlier drafts aimed at something
+series-independent; we have instead leaned on what the Ordnance Survey's own conventions guarantee — a fixed
+face inventory, letter-spacing reserved for administrative lettering, numerals set apart from place names —
+because accuracy on these maps matters more to the resulting gazetteer than generality across others.
 
 ---
 
 ## 4. Results so far
 
-*Preliminary — the font model is being built against the full Characteristic-Sheet taxonomy; corpus-wide coverage is still growing.*
+*Research in progress. The figures below are measured; where something is not yet measured, it is said so.*
 
-**Building the font model.** We are training the letterform reader against the **whole** Characteristic-Sheet taxonomy — around **44 writing faces** (water, the four antiquity hands, the settlement roman, the numerals, and the full administrative capital hierarchy), one real-map reference alphabet per face, each grown letter-by-letter from a single Characteristic-Sheet exemplar. Every label will carry a **best-three** font reading with confidences. A **separability analysis** — measuring which faces the six-inch maps actually let us tell apart, and which collapse onto a shared face — is under way; its results, including per-face reliability and the human-confirmed identical-face merges, will be published here as they are validated.
+### Joining words into labels — measured
 
-**Where the value really is:** the font *disambiguates text*. "Camp", "Castle", "Cross", "Stone" mean an *antiquity* in the antiquity hand but a modern feature in roman or italic — so typing is **font-conditioned**. A companion analysis mines the corpus for exactly which words are font-ambiguous, so the recovered face resolves the many ordinary place-names that the text alone leaves undecided.
+The largest piece of validated work to date is the step that turns a text spotter's **words** into whole
+**labels**. Scored on 5,037 GB1900 labels in map regions the method was never trained on, counting a success
+only when the assembled label reproduces the volunteer's transcription **exactly**:
 
-**Coverage:** the current edition assigns a feature type to **871,359 of the 2,666,341 labels (32.7%)**, across **15 Getty-AAT-aligned classes** — derived from the OS-grounded lexicon, the OS single-letter abbreviations (e.g. a standalone italic *W* = *well*, ~191k labels), and the font signal where a sheet has been read. Because most of that typing rests on the text and the abbreviation conventions, it is **already national in scope** and does not wait on font-spotting. The typographic reading itself is being extended across **all 35,514 label-bearing map regions** (a resumable GPU job), which progressively enriches the font-conditioned cases; the remaining ~67% of labels are as yet untyped and are shown in grey on the map.
+| method | exact reproduction |
+|---|---|
+| nearest single word alone | 0.219 |
+| hand-set geometric rules | 0.381 |
+| learned join + sequence constraint | **0.425** |
+
+Recognition is not the limiting factor — on the 93% of labels read without a single unknown character, where
+a mismatch must be a *grouping* error, the figure is 0.449. The join decision itself is accurate (held-out
+pairwise AUC 0.957); the difficulty is in assembling accurate pairwise decisions into whole labels without
+letting errors compound.
+
+**[→ Full account, including two approaches that did not work](label-assembly.md)**
+
+### Reading the lettering — in progress
+
+The Characteristic Sheets describe **44 writing categories**, but many of them are engraved in the *same*
+face — the sheets distinguish them by name, not always by letterform. Collapsing the identical ones under
+human review gives a working inventory of **15 distinguishable faces**, of which **9 currently carry
+verified real-map reference labels** (951 in total). The remaining six are rare enough that we have not yet
+found confirmed examples, and we would rather report an empty class than a guessed one.
+
+Two of those merges are worth stating plainly, because they are limits of the source rather than of the
+method. Prehistoric/Saxon and Norman antiquities are both blackletter, but the cut varies so much between
+instances that a human reviewer could not reliably separate them — a distinction nobody can make by eye is
+not one to ask a matcher for. And the heavier italic used for *Chapelries and Other Churches* differs from
+the lighter italic of fifteen other categories only in the terminals of a lowercase **s**, which is finer
+than a size-normalised glyph can carry. Both are recorded as single faces rather than split on faith.
+
+**Whole-word slant is a real and independent signal**, and how it is measured matters: searching for the
+shear that best squares up a word separates upright from italic well, whereas the more obvious measure —
+the lean of the ink itself — scores barely above chance, because it mostly reports where a word's ascenders
+happen to fall. Fusing slant with the letterform comparison improves balanced accuracy materially, and the
+combined reading agrees with human judgement on 0.886 of a held-out sample of 300.
+
+**Adding more reference examples to the faces we already know well buys almost nothing** — a further 274
+moved balanced accuracy by 0.010, where the slant signal moved it by 0.063. The constraint is the *breadth*
+of faces covered, not the depth of any one.
+
+### Text-based typing — national in scope
+
+Independently of the typographic reading, the current edition assigns a feature type to **871,359 of the
+2,666,341 labels (32.7%)**, across **15 Getty-AAT-aligned classes**, derived from the OS-grounded lexicon and
+the OS single-letter abbreviation conventions (a standalone italic *W* = *well*, ~191k labels). Because that
+typing rests on the text, it is already national in scope. The remaining ~67% are as yet untyped and are
+shown in grey on the map.
+
+**Where the font signal earns its place** is in disambiguating text that the words alone cannot settle.
+"Camp", "Castle", "Cross" and "Stone" mean an *antiquity* in the antiquity hand but a modern feature in roman
+or italic, so typing is **font-conditioned** for exactly the cases a lexicon gets wrong.
+
+### Not yet measured
+
+The headline question — **what proportion of labels GB1900 and GB-STAMP each miss** — is deliberately not
+quoted here yet. A first attempt was contaminated: some map regions had been processed while the tile service
+was failing, and had recorded almost no text despite the maps being full of it. Those regions look identical
+to genuinely empty countryside in the output, so the measurement was quietly counting an infrastructure
+failure as a detection failure. The regions are being reprocessed, and each now records how much imagery it
+actually saw, so a starved run can never again pass for a quiet one.
 
 ## Getting the data
 

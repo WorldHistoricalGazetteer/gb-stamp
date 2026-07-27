@@ -6,19 +6,20 @@
 
 GB1900 is a volunteer transcription of every text label on the Ordnance Survey six-inch County Series maps of Great Britain (surveyed c. 1900) — roughly **2.67 million labels**, each a point plus its text. What it lacks is **feature type**: it records *what a label says and where*, but not *what kind of thing it is*.
 
-The Ordnance Survey, however, encoded feature type in its **typography** — italic for water, blackletter for antiquities, roman for settlements, and distinct capitals for each rung of the administrative hierarchy, as documented in its "Characteristic Sheets". **GB-STAMP recovers that lost styling from the scanned maps and turns it back into feature types**: it learns a real-map alphabet for each of the OS's writing faces (seeded from a single Characteristic-Sheet exemplar letter and grown by matching letter-shapes across the maps), gives every label a **best-three** font reading, re-weights those readings with the text and with independent records of civic status (administrative areas, market towns, parliamentary representation), and aligns the result to the Getty Art & Architecture Thesaurus.
+The Ordnance Survey, however, encoded feature type in its **typography** — italic for water, blackletter for antiquities, roman for settlements, and distinct capitals for each rung of the administrative hierarchy, as documented in its "Characteristic Sheets". **GB-STAMP recovers that lost styling from the scanned maps and turns it back into feature types**: it finds the words on the map, **joins them back into whole labels**, compares each label against verified real-map reference examples of the OS writing faces (like letter against like letter, so what a label *says* never leaks into what face it is judged to be), gives every label a **best-three** font reading, re-weights those readings with the text and with independent records of civic status (administrative areas, market towns, parliamentary representation), and aligns the result to the Getty Art & Architecture Thesaurus.
 
 ### 🗺️ [**Explore the interactive map »**](https://worldhistoricalgazetteer.github.io/gb-stamp/map/)
 
 ## Read more
 
 - **[Methodology](https://worldhistoricalgazetteer.github.io/gb-stamp/)** — the source, the limitations of plain GB1900 and its abridgement, and how the method works (plain-terms + academic).
+- **[Joining words into labels](https://worldhistoricalgazetteer.github.io/gb-stamp/label-assembly)** — a text spotter finds words, a gazetteer needs labels. How GB1900's 2.67M transcriptions let us both train and honestly score that join, and two approaches that turned out not to work.
 - **[Characteristic-Sheet extraction](https://worldhistoricalgazetteer.github.io/gb-stamp/characteristic-sheets)** — every OS writing category, with exemplars, letterforms, and AAT mappings.
 - **[Interactive map](https://worldhistoricalgazetteer.github.io/gb-stamp/map/)** — all 2.67M crowd labels, coloured by recovered feature type, with a toggleable OS sheet grid and per-sheet stats.
 - **[Web-map feasibility](https://worldhistoricalgazetteer.github.io/gb-stamp/webmap)** — a static, serverless, searchable MapLibre interface over 2.67M points (PMTiles + IndexedDB, hosted from GitHub Releases).
 - **[Licensing](https://worldhistoricalgazetteer.github.io/gb-stamp/licensing)**.
 
-> **Status:** research in progress. This repository documents the approach ahead of full evaluation; accuracy, coverage, and honest characterisation of the limits will be published as the work is validated. The enriched dataset will be distributed as a [GitHub Release](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases).
+> **Status:** research in progress, and reported that way. Where a step has been measured on held-out data the figures are given; where it has not, that is said rather than glossed. The word-joining step currently reproduces a volunteer's transcription exactly for **0.425** of held-out labels, against 0.219 for the nearest single word. Two plausible improvements are documented as having produced **no** measurable gain. The enriched dataset is distributed as a [GitHub Release](https://github.com/WorldHistoricalGazetteer/gb-stamp/releases).
 
 ## Acknowledgements
 
