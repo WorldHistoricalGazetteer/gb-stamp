@@ -114,7 +114,8 @@ a mismatch must be a *grouping* error, the figure is 0.449. The join decision it
 pairwise AUC 0.957); the difficulty is in assembling accurate pairwise decisions into whole labels without
 letting errors compound.
 
-**[→ Full account, including two approaches that did not work](label-assembly.md)**
+**[→ Full account, including two approaches that did not work](label-assembly.md)** ·
+**[→ How the records are shaped](data-model.md)**
 
 ### Reading the lettering — in progress
 
