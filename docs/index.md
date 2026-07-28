@@ -68,11 +68,15 @@ GB1900 volunteers transcribed the *words* but, understandably, not the *style* t
    examples for each OS writing face, letter against like letter, so what a label *says* never leaks into
    what face it is judged to be. Whole-word slant — measured by searching for the shear that best squares up
    the word, not by the lean of its ink — is fused in as an independent signal.
-4. **Best three guesses, then arbitrate with text.** Some OS faces are genuinely alike, and a few categories
-   were engraved in an *identical* face, so each label gets a ranked **top-three** reading with confidences
-   rather than a single verdict. Those are then re-weighted by evidence the letterforms cannot see: which
-   words co-occur with which face across the corpus, and independent records of the civic status the OS
-   capitals were themselves encoding.
+4. **Best three guesses, then arbitrate against the corpus.** Some OS faces are genuinely alike, and a few
+   categories were engraved in an *identical* face, so each label gets a ranked **top-three** reading with
+   confidences rather than a single verdict — carried alongside its measured **cap height**, because on this
+   series the typeface encodes feature *type* while the size encodes *importance*, and a parish name and a
+   county name can share a face yet differ in height.
+   Those readings are then re-weighted by evidence the letterforms alone cannot see, drawn from the corpus
+   itself: which **words** habitually occur in which face (*Camp*, *Castle*, *Cross* and *Stone* mean an
+   antiquity in the antiquity hand but a modern feature in roman), and which **classes of name** — parishes,
+   districts, settlements, hills, railways, counties — occur in which face *at which size*.
 5. **Map to a shared vocabulary.** The recovered types are aligned to the Getty **Art & Architecture
    Thesaurus**, so the enriched gazetteer can be searched, filtered and linked to other datasets.
 
@@ -153,6 +157,11 @@ shown in grey on the map.
 **Where the font signal earns its place** is in disambiguating text that the words alone cannot settle.
 "Camp", "Castle", "Cross" and "Stone" mean an *antiquity* in the antiquity hand but a modern feature in roman
 or italic, so typing is **font-conditioned** for exactly the cases a lexicon gets wrong.
+
+Two corpus-wide analyses will supply that conditioning once the typographic reading covers the series: which
+**words** habitually occur in which face, and which **classes of name** — parishes, districts, settlements,
+hills, railways, counties — occur in which face *at which cap height*. Size is the OS's second axis, not
+decoration: a class that shares a face with another may still be separable by height.
 
 ### Not yet measured
 

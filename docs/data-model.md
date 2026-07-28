@@ -92,6 +92,24 @@ This is the node nothing else in the ecosystem produces. Neither MapReader nor M
 into labels, although the ICDAR MapText competition scores linking as a task — see
 [joining words into labels](label-assembly.md).
 
+## The lettering itself, as a `describing` body
+
+What the lettering physically *is* is a measurement, not a classification, so it does not belong in a
+classifying body:
+
+```jsonc
+{"purpose": "describing", "type": "TextualBody", "format": "application/json",
+ "value": "{\"cap_height_px\": 19.1, \"cap_height_m\": 13.4, \"slant_deg\": 1.2, \"lines\": 1,
+            \"face\": {\"source\": \".../face/Upright-Solid-Serif\", \"confidence\": 0.61,
+                      \"alternatives\": [...]}}"}
+```
+
+Cap height is carried in map pixels **and** in metres on the ground: pixels are comparable only within one
+zoom level, and the ground figure is what a later analysis wants. It is deliberately kept out of the face,
+because on this series the typeface encodes feature **type** while the size encodes **importance** — a
+parish name and a county name can share a face and be separable by height alone. Folding one into the other
+would discard half the signal.
+
 ## Provenance: `creator` and `generator` do the work
 
 The distinction that matters most for evaluation is between text a **human** supplied and text a **machine**
