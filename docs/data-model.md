@@ -1,119 +1,143 @@
 ---
 title: Data model
-description: How GB-STAMP records text on maps, and a proposal for interchange
+description: GB-STAMP records as a profile of W3C Web Annotation on IIIF canvases
 ---
 
 # Data model
 
-GB-STAMP emits three kinds of record, and the distinctions between them do real work — most importantly the
-distinction between *what a volunteer read*, *what a machine found by itself*, and *what a machine found
-because it was told where to look*. Conflating those would let circular evidence into an evaluation.
+Text on a map **is an annotation**, structurally: the target is a region of an image, and the body is the
+transcribed string, plus a link to a gazetteer entity, plus a classification. That is precisely the shape of
+the [W3C Web Annotation Data Model](https://www.w3.org/TR/annotation-model/), and
+[IIIF](https://iiif.io) supplies canonical image addressing over the canvases the map libraries we depend on
+— the National Library of Scotland, Rumsey, the Library of Congress, the British Library — already serve.
 
-This model is deliberately shaped to the **[MapText Data Model](https://github.com/maps-as-data/maptext_data_model)**
-sketched at the Open Maps Meeting in November 2024. That sketch is a proposal rather than a schema — no
-serialisation has been formalised yet — so what follows is our concrete instantiation of it, offered as
-something the community can adopt, amend or reject. Where we have invented a field name we say so.
+So GB-STAMP does **not** define a new schema. It defines a **profile**: a documented use of two mature
+standards, with the conventions this material actually needs. A parallel vocabulary would duplicate a
+standard for no gain, and would strand us outside every IIIF viewer and annotation tool that exists.
 
-## The three record types
+This matters beyond tidiness. The
+[MapText Data Model](https://github.com/maps-as-data/maptext_data_model) proposal — sketched at the Open
+Maps Meeting in November 2024, and dormant since — names the requirement in its own README: *"to save as
+IIIF annotations in particular"*. Nobody has acted on it. We think that instinct is right and should be the
+organising principle rather than a footnote.
 
-| type | in the sketch | what it is here |
-|---|---|---|
-| `TextAnnotation` | `TextAnnotation` | one word found on the map, or one volunteer transcription |
-| `CombinedAnnotation` | `CombinedAnnotation` | a whole label: **ordered** member words |
-| `SymbolAnnotation` | `SymbolAnnotation` | reserved; not yet emitted |
+## One caveat, stated first
 
-A **label** is a `CombinedAnnotation`, and its members are ordered because reading order is part of what the
-label *is*: `MOOR MIDDLETON` is not the same label as `MIDDLETON MOOR`. This is the node in the sketch that
-nothing in the ecosystem currently produces — neither MapReader nor MapTextPipeline performs word-to-label
-linking, though the ICDAR MapText competition scores it as a task.
+W3C Web Annotation is verbose, and anyone who knows the standard will reasonably ask whether we have thought
+about that at scale. We have, and the position is deliberate:
 
-## Fields
+> **Annotations are the interchange and provenance format at the point of extraction and correction. The
+> attestation graph remains the internal model.**
 
-Every annotation carries:
+The deliverable is the documented *mapping* between the two, not a wholesale re-serialisation of the index.
+
+## The profile
+
+### A word
+
+One word found on the map, or one volunteer transcription.
 
 ```jsonc
 {
-  "id":            "gbstamp:w/gb_4318_2824/00123",   // stable, namespaced
-  "type":          "TextAnnotation",                  // or CombinedAnnotation
-  "transcription": {"text": "Middleton", "confidence": 0.97},
-  "target": {                                         // where it is
-    "geometry":   {"type": "Polygon", "coordinates": [[...]]},
-    "baseline":   {"type": "LineString", "coordinates": [[...]]},  // the text's centre-line
-    "crs":        "EPSG:3857"
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "https://whgazetteer.org/gb-stamp/anno/w/gb_4318_2824/00123",
+  "type": "Annotation",
+  "motivation": "transcribing",
+  "body": [
+    {"type": "TextualBody", "purpose": "transcribing", "value": "Middleton",
+     "format": "text/plain", "language": "en"},
+    {"purpose": "classifying", "source": "https://whgazetteer.org/gb-stamp/face/Upright-Solid-Serif"}
+  ],
+  "target": {
+    "source": "https://maps.nls.uk/iiif/canvas/101603659",
+    "selector": [
+      {"type": "SvgSelector", "value": "<svg><polygon points='...'/></svg>"},
+      {"type": "FragmentSelector", "conformsTo": "http://www.opengis.net/def/crs/EPSG/0/3857",
+       "value": "..."}
+    ]
   },
-  "reference_point": {"type": "Point", "coordinates": [x, y]},     // optional; see below
-  "semantic_type": {"label": "wells", "uri": "http://vocab.getty.edu/aat/300006861",
-                    "confidence": 0.62, "alternatives": [...]},    // optional
-  "provenance": {
-    "mode":  "automatic",                             // manual | automatic | prompted
-    "agent": "MapTextPipeline/ViTAEv2_S rumsey-finetune",
-    "tool":  "gb-stamp/spot_sheet",
-    "date":  "2026-07-28"
+  "generator": {"id": "https://github.com/maps-as-data/MapTextPipeline",
+                "type": "Software", "name": "MapTextPipeline ViTAEv2_S rumsey-finetune"},
+  "generated": "2026-07-28T00:00:00Z"
+}
+```
+
+### A label
+
+The assembled label — and the reason ordering is not decoration: `MOOR MIDDLETON` is not the label
+`MIDDLETON MOOR`. W3C already has the right construct, **`oa:List`**, an *ordered* multiplicity.
+
+```jsonc
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "id": "https://whgazetteer.org/gb-stamp/anno/l/gb_4318_2824/0007",
+  "type": "Annotation",
+  "motivation": "transcribing",
+  "body": [
+    {"type": "TextualBody", "purpose": "transcribing", "value": "Middleton Moor"},
+    {"purpose": "classifying", "source": "http://vocab.getty.edu/aat/300008795"},
+    {"purpose": "identifying", "source": "https://whgazetteer.org/places/12345"}
+  ],
+  "target": {
+    "type": "List",
+    "items": [
+      "https://whgazetteer.org/gb-stamp/anno/w/gb_4318_2824/00123",
+      "https://whgazetteer.org/gb-stamp/anno/w/gb_4318_2824/00124"
+    ]
   }
 }
 ```
 
-A `CombinedAnnotation` adds:
+This is the node nothing else in the ecosystem produces. Neither MapReader nor MapTextPipeline links words
+into labels, although the ICDAR MapText competition scores linking as a task — see
+[joining words into labels](label-assembly.md).
 
-```jsonc
-{
-  "type": "CombinedAnnotation",
-  "items": ["gbstamp:w/.../00123", "gbstamp:w/.../00124"],   // ORDERED, reading order
-  "lines": 2,                                                // 1 unless set on multiple lines
-  "transcription": {"text": "Middleton Moor", "confidence": 0.94}
-}
-```
+## Provenance: `creator` and `generator` do the work
 
-### `provenance.mode` — the field that matters most
+The distinction that matters most for evaluation is between text a **human** supplied and text a **machine**
+found. W3C already separates these — `creator` for the agent responsible, `generator` for the software that
+produced the serialisation — and the separation expresses our three cases exactly, without inventing a
+vocabulary:
 
-| value | meaning | may it be scored against GB1900? |
-|---|---|---|
-| `manual` | a GB1900 volunteer read this | it *is* the reference |
-| `automatic` | a detector found it unaided | **yes** |
-| `prompted` | a detector was told where to look, by a GB1900 pin | **no — circular** |
+| our case | `creator` | `generator` | may it be scored against GB1900? |
+|---|---|---|---|
+| a volunteer read it | GB1900 contributor | — | it *is* the reference |
+| a detector found it unaided | — | the spotter | **yes** |
+| a detector was told where to look, by a pin | GB1900 contributor | the spotter | **no — circular** |
 
-A prompted detection's text comes *from* GB1900, so scoring it against GB1900 measures nothing and returns a
-perfect result by construction. Recording the mode makes that structural rather than a matter of anyone
-remembering. Prompted records remain valuable — a label the crowd found and the spotter missed can still be
-given a box, and from that box a typographic reading — but they are a different kind of evidence and are
-labelled as such.
+The third row is the important one. A **prompted** detection's text came *from* GB1900, so scoring it against
+GB1900 returns a perfect result by construction. Expressing it as *both* a human creator and a software
+generator is more honest than a flat label would be, because it records **why** the record is circular: the
+human is in its provenance chain. A record with a `creator` cannot be scored against that creator's own data.
 
-### `reference_point` versus `target.geometry`
+## The GB1900 pin is not the label's extent
 
-GB1900 gives a **point**, placed near the start of a label and often just off the ink. It is not the label's
-extent. Keeping it in `reference_point` rather than coercing it into `target.geometry` preserves that
-difference; a record may legitimately have a reference point and no geometry (an unmatched volunteer pin), or
-geometry and no reference point (a detection the crowd never pinned).
+A GB1900 pin is a point placed near a label's start, often just off the ink. Coercing it into the target
+geometry would assert something false. In the profile it is a separate target on the same annotation, using a
+`PointSelector`, so a record may legitimately have a pin and no region (a transcription nothing was found
+at) or a region and no pin (a detection the crowd never made).
 
-### `target.baseline`
+## Why this converges with the correction interface
 
-The text's centre-line, distinct from the outline. On a curved label the outline's bounding rectangle points
-*across* the curve rather than along it, so the baseline is the honest carrier of direction. MapTextPipeline
-emits one per detection; where a record predates its capture we reconstruct it from the outline and say so in
-`provenance.tool`.
+Extracted map text lands as W3C annotations on IIIF canvases. A human corrector fixes them in
+**[Annotorious](https://annotorious.dev)** or **[Recogito Studio](https://recogitostudio.org)** — mature
+tools in the Pelagios orbit, with plugin ecosystems, polygon selection and geotagging already built — and the
+corrected annotations flow onward carrying their provenance. Choosing the standard rather than a private
+schema is what makes that possible at no cost to us; choosing a parallel vocabulary would mean building a
+correction interface ourselves.
 
-### `semantic_type`
+## Open questions we would want a community answer to
 
-Getty AAT as `label` + `uri`, with `confidence` and ranked `alternatives`. Several OS writing categories are
-engraved in an *identical* face and are inseparable by design, so a single verdict would be false precision;
-the alternatives list is how that degrades gracefully.
-
-## What we are proposing, and what we are not
-
-**Proposing:** the field shapes above, in particular the three-valued `provenance.mode`, the separation of
-`reference_point` from `target.geometry`, the explicit `baseline`, and `items` as an *ordered* list.
-
-**Not proposing:** a serialisation. The sketch names JSON-LD (W3C) and COCOtext, with transformation to IIIF
-Presentation. We emit newline-delimited JSON because that is what our pipeline and our release format need;
-the field names are chosen so a JSON-LD context can be laid over them later without renaming anything.
-
-**Open questions we would want a community answer to:** whether `CombinedAnnotation` may nest (a label that
-is part of a larger label); how to express that two annotations are the *same* label found by different
-means, which is the join between a volunteer pin and a machine detection; and whether confidence belongs on
-the transcription, the semantic type, or both.
+- May a label annotation nest — a label that is part of a larger label?
+- How should we express that two annotations are the **same label found by different means**, which is
+  exactly the join between a volunteer's pin and a machine's detection?
+- Does confidence belong on the transcription body, the classifying body, or both?
+- Is `oa:List` over annotation URIs the right construct for word→label membership, or should the label target
+  the *canvas regions* directly and carry membership another way?
 
 We intend to take these to the
-[maptext_data_model](https://github.com/maps-as-data/maptext_data_model) repository once our own dataset is
-final, so that the proposal arrives with evidence attached rather than as an opinion.
+[maptext_data_model](https://github.com/maps-as-data/maptext_data_model) repository, alongside the Pelagios
+tooling, once our own dataset is final — so that the proposal arrives with a working implementation and a
+corpus behind it rather than as an opinion.
 
 [← Back to the methodology](index.md)

@@ -14,7 +14,7 @@ The Ordnance Survey, however, encoded feature type in its **typography** — ita
 
 - **[Methodology](https://worldhistoricalgazetteer.github.io/gb-stamp/)** — the source, the limitations of plain GB1900 and its abridgement, and how the method works (plain-terms + academic).
 - **[Joining words into labels](https://worldhistoricalgazetteer.github.io/gb-stamp/label-assembly)** — a text spotter finds words, a gazetteer needs labels. How GB1900's 2.67M transcriptions let us both train and honestly score that join, and two approaches that turned out not to work.
-- **[Data model](https://worldhistoricalgazetteer.github.io/gb-stamp/data-model)** — how records are shaped, why provenance is a first-class field, and our concrete proposal back to the community MapText Data Model.
+- **[Data model](https://worldhistoricalgazetteer.github.io/gb-stamp/data-model)** — records as a **profile of W3C Web Annotation on IIIF canvases**, not a new schema; why `creator` versus `generator` decides what may be scored against GB1900.
 - **[Characteristic-Sheet extraction](https://worldhistoricalgazetteer.github.io/gb-stamp/characteristic-sheets)** — every OS writing category, with exemplars, letterforms, and AAT mappings.
 - **[Interactive map](https://worldhistoricalgazetteer.github.io/gb-stamp/map/)** — all 2.67M crowd labels, coloured by recovered feature type, with a toggleable OS sheet grid and per-sheet stats.
 - **[Web-map feasibility](https://worldhistoricalgazetteer.github.io/gb-stamp/webmap)** — a static, serverless, searchable MapLibre interface over 2.67M points (PMTiles + IndexedDB, hosted from GitHub Releases).

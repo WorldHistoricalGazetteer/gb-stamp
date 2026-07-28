@@ -2,20 +2,28 @@
 
 ## After the dataset is final
 
-- [ ] **Take the data model to `maps-as-data/maptext_data_model`.**
-      The MapText Data Model is a sketch from the Open Maps Meeting (Nov 2024) — a README, a diagram, two
-      commits, no schema, dormant since Jan 2025 — and the repository explicitly asks for people to help
-      formalise it. We are unusually well placed to contribute, because we hold the two things the sketch
-      most needs evidence for:
-      - a working implementation of `CombinedAnnotation` (ordered word→label linking), which nothing else in
-        the ecosystem produces — neither MapReader nor MapTextPipeline links words, though ICDAR MapText
-        scores it as a task;
-      - a corpus large enough that the `provenance` distinction actually bites, between a volunteer
-        transcription, an unaided detection, and a detection prompted by a pin.
-      Our instantiation is written up at [`docs/data-model.md`](docs/data-model.md), including the three
-      open questions we would want a community answer to (nesting, cross-provenance identity, where
-      confidence belongs). **Deliberately deferred until the dataset is final**, so the proposal arrives with
-      evidence rather than as an opinion.
+- [ ] **Take the annotation profile to the Maps as Data and Pelagios communities.**
+      Not a new schema — a **profile of W3C Web Annotation on IIIF canvases**. Text on a map *is* an
+      annotation, and a parallel vocabulary would duplicate a mature standard for no gain while stranding us
+      outside every IIIF viewer and annotation tool that exists. The
+      [MapText Data Model](https://github.com/maps-as-data/maptext_data_model) README names the requirement
+      itself — *"to save as IIIF annotations in particular"* — and nobody has acted on it. It has been
+      dormant since January 2025.
+      We are well placed to lead it, holding the two things the sketch most needs evidence for:
+      - a working implementation of ordered word→label linking (`oa:List`), which nothing else in the
+        ecosystem produces — neither MapReader nor MapTextPipeline links words, though ICDAR MapText scores
+        linking as a task;
+      - a corpus large enough that the `creator`/`generator` provenance distinction actually bites, between
+        a volunteer transcription, an unaided detection, and a detection prompted by a pin.
+      Write-up at [`docs/data-model.md`](docs/data-model.md), with four open questions stated rather than
+      assumed away. **Deliberately deferred until the dataset is final**, so the proposal arrives with a
+      working implementation and a corpus behind it rather than as an opinion.
+
+- [ ] **Converge with the Pelagios correction tooling.** Extracted text lands as W3C annotations on IIIF
+      canvases; a corrector fixes them in Annotorious or Recogito Studio; corrected annotations flow onward
+      carrying provenance. That is the human-in-the-loop interface a spotter pipeline needs and which we
+      would otherwise have to build. Recogito Studio's geotagging plugin already ships a WHG connector, so
+      there is a live downstream consumer to harden rather than a relationship to start.
 
 - [ ] Quantify the ceiling on transcription agreement. Some GB1900 transcriptions are wrong, so exact
       reproduction can never reach 1.0. Needs human adjudication of a disagreement sample — which doubles as
