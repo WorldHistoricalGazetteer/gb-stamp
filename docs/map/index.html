@@ -95,7 +95,11 @@ maplibregl.addProtocol("pmtiles", protocol.tile);
 const map=new maplibregl.Map({
   container:"map",
   style:{version:8,glyphs:"https://fonts.openmaptiles.org/{fontstack}/{range}.pbf",sources:{
-      carto:{type:"raster",tiles:["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"],tileSize:256,
+      // CARTO requires a key since 2026-08: keyless tiles come back HTTP 200 with "API KEY REQUIRED"
+      // printed across them, a failure that reports success. This key is bound by CARTO to the
+      // origin https://worldhistoricalgazetteer.github.io (the same key the sibling WHG Pages sites
+      // use); it is public by nature and the origin restriction, not secrecy, is the control.
+      carto:{type:"raster",tiles:["a","b","c"].map(h=>`https://${h}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png?key=cb1_2yg5_1_9504b922f13f07d40819d950`),tileSize:256,
              attribution:'&copy; OpenStreetMap contributors, &copy; CARTO'},
       os:{type:"raster",tiles:["https://mapseries-tilesets.s3.amazonaws.com/os/6inchsecond/{z}/{x}/{y}.png"],
           tileSize:256,minzoom:10,maxzoom:17,attribution:'OS six-inch &copy; National Library of Scotland'}},
